@@ -1,5 +1,4 @@
-{
-    "songs": [
+[
         {
             "artist": "The Script",
             "title": "Breakeven",
@@ -61,6 +60,4 @@
             "genre": ["Indie", "Alternative"],
             "year": 2014
         }
-    ]
-}
-
+]
