@@ -1,0 +1,168 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>JSON Songlist</title>
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
+	<!-- CSS FOR STYLING THE PAGE -->
+	<style>
+		body {
+			background-color: aliceblue;
+			font-family: Verdana, Geneva, Tahoma, sans-serif;
+			text-align: center;
+		}
+
+		li {
+			display:block;
+
+		}
+
+		h2 {
+			font-size: 20;
+		}
+
+		.list {
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		input {
+			font-family: Verdana, Geneva, Tahoma, sans-serif;
+		}
+	</style>
+</head>
+
+<body>
+	<section>
+		<h1>JSON Song List</h1>
+	</section>
+	<h2>Part 2:</h2>
+	<div id="rawstring"></div>
+
+	<h2>Part 3:</h2>
+	<p>Select an option from the dropdown menu to filter songs by genre.</p>
+	<form id="form">
+		<select id="myselect">
+			<option value="">Choose an option:</option>
+			<option value="Show All">Show All</option>
+			<option value="Pop">Pop</option>
+			<option value="Rock">Rock</option>
+			<option value="Indie">Indie</option>
+			<option value="Alternative">Alternative</option>
+		</select>
+		<input type="button" id="button" value = "Filter" onclick="change_myselect()">
+	</form>
+
+	<div id="list"></div>
+
+	<script language = "javascript">
+		allSongs = [];
+		songs = [];
+		$.get("https://oliviabyun.github.io/json-songlist/songlist.json", 
+			function(data) {
+				//loop through all data
+				for (i = 0; i < data.length; i++) {
+					allSongs.push(JSON.stringify(data[i]));
+				}
+				displayRawStrings(allSongs);
+				displaySongs(allSongs);
+			}
+		)
+
+		function displayRawStrings(songArray) {
+			strHTML = "<ul>";
+
+			for (i = 0; i < songArray.length; i++) {
+				strHTML += songArray[i] + "<br/>";
+			}
+
+			strHTML += "</ul>";
+			document.getElementById("rawstring").innerHTML = strHTML;
+		}
+
+		function displaySongs(songArray) {
+			let strHTML = "<ul>";
+
+			for(i = 0; i < songArray.length; i++) {
+				const object = JSON.parse(songArray[i]);
+				genres = "";
+				for (j = 0; j < object.genre.length; j++) {
+					genres += object.genre[j] + " ";
+				}
+				strHTML += "<li><strong>Artist:</strong> " + object.artist 
+					+ "<br/><strong>Title:</strong> " + object.title 
+					+ "<br/><strong>Genre:</strong> " + genres + 
+					"<br/><strong>Year:</strong> " + object.year 
+					+ "<br/><br/>";
+			}
+			strHTML += "</ul>";
+			document.getElementById("list").innerHTML = strHTML;
+		}
+
+		function change_myselect() {
+			songs = [];
+			//get value of filter selected by user
+			sel = document.getElementById("myselect").value;
+
+			if (sel == "") {
+				alert("Please choose a filter.")
+			} else {
+				filterData(sel, allSongs);
+			}
+		}
+
+		function clearArray(myArray) {
+			for (i = 0; i < myArray.length; i++) {
+				myArray.pop();
+			}
+		}
+
+		function filterData() {
+			if (sel == "Show All") {
+				displaySongs(allSongs);
+			} else {
+				for (i = 0; i < allSongs.length; i++) {
+					const object = JSON.parse(allSongs[i]);
+
+					genres = object.genre;
+					for (j = 0; j < genres.length; j++) {
+						if (genres[j] == sel) {
+							songs.push(allSongs[i]);
+						}
+					}
+				}
+				displaySongs(songs);
+			}
+		}
+
+		/*function filterData() {
+			$.get("https://oliviabyun.github.io/json-songlist/songlist.json", 
+				function(data) {
+					songs = [];
+					for (i = 0; i < data.length; i++) {
+						//genres = [];
+						currSong = JSON.stringify(data[i]);
+						//currSong = data[i];
+
+						for(g = 0; g < data[i].genre.length; g++) {
+							//get genre, remove quotations
+							genre = JSON.stringify(data[i].genre[g]);
+							genre = genre.substring(1, genre.length-1);
+
+							//add to list of songs if 
+							if (genre == sel) {
+								songs.push(currSong);
+							}
+						}
+						//songs.push(JSON.stringify(data[i]));
+					}
+					displaySongs(songs);
+				}
+			)
+		}*/
+
+	</script>
+</body>
+
+</html>
