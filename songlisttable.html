@@ -136,32 +136,6 @@
 			}
 		}
 
-		/*function filterData() {
-			$.get("https://oliviabyun.github.io/json-songlist/songlist.json", 
-				function(data) {
-					songs = [];
-					for (i = 0; i < data.length; i++) {
-						//genres = [];
-						currSong = JSON.stringify(data[i]);
-						//currSong = data[i];
-
-						for(g = 0; g < data[i].genre.length; g++) {
-							//get genre, remove quotations
-							genre = JSON.stringify(data[i].genre[g]);
-							genre = genre.substring(1, genre.length-1);
-
-							//add to list of songs if 
-							if (genre == sel) {
-								songs.push(currSong);
-							}
-						}
-						//songs.push(JSON.stringify(data[i]));
-					}
-					displaySongs(songs);
-				}
-			)
-		}*/
-
 	</script>
 </body>
 
